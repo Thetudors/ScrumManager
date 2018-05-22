@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+
+
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div style="height: 100vh;" id="storyies" class="col-md-3 col-sm-6 bg-secondary ">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h2 class="text-center text-light">Stories </h2>
+                    </div>
+                    <div class="col-md-2"><i id="addStory" class="fas fa-plus-circle fa-2x mt-1 text-light"></i></div>
+                </div>
+
+
+                <p class="text-light">Double-click Story for new task</p>
+                <hr>
+                <div class="card w-100" id="storyCard" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100vh;" id="sortableNotStarted" class="col-md-3 col-sm-6 bg-light">
+                <h2 class="text-center text-secondary">Not Started</h2>
+                <hr>
+                <div class="card text-light w-100" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Login Sistemi <i id="info" data-cardid="1" class="fas fa-info-circle"></i></h5>
+
+
+                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
+                        <p class="card-text user-name">Onat AKTAŞ</p>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100vh;" id="sortableInProgress" class="col-md-3 col-sm-6 bg-secondary">
+                <h2 class="text-center text-light">In Progress</h2>
+                <hr>
+                <div class="card text-light w-100" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Login Sistemi
+                            <ts class="fas fa-trash-alt"></ts>
+                        </h5>
+
+                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
+                        <p class="card-text user-name">Onat AKTAŞ</p>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100vh;" id="sortableDone" class="col-md-3 col-sm-6 bg-light">
+                <h2 class="text-center text-secondary">Done</h2>
+                <hr>
+                <div id="taskid5" class="card text-light w-100" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Login Sistemi <i id="info" data-cardid="0" class="fas fa-info-circle"></i>
+                            <ts data-thid="5" class="fas fa-trash-alt"></ts>
+                        </h5>
+
+                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
+                        <p class="card-text user-name">Onat AKTAŞ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+        var Users;
+
+        $(function () {
+
+            $.post("/Member/GetStories",  function (result) {
+
+                for (var i = 0; i < result.length; i++) {
+                    var SampleStory = "<div class='card w-100' id='storyCard' style='width: 18rem;' StoryId='" + result[i].StoryId + "'>" +
+                        "<div class='card-body'>" +
+                        "<h5 class='card-title'>" + result[i].Name + "</h5>" +
+                        "<p class='card-text'>" + result[i].Description + "</p>" +
+                        "</div>" +
+                        "</div>";
+                    $("#storyies").append(SampleStory);
+                }
+                
+            });
+            $.post("/Member/GetTask", function (result) {
+
+                for (var i = 0; i < result.length; i++) {
+
+                    var SampleTask = "<div TaskId=" + result[i].TaskId + " class='card text-light w-100' style='width: 18rem;'>" +
+                        "<div class='card-body'>" +
+                        "<h5 class='card-title'>" + result[i].Name + " <i id='info' data-cardid=" + result[i].TaskId + "  class='fas fa-info-circle'></i> <ts data-thid=" + result[i].TaskId + " class='fas fa-trash-alt'></ts> </h5>" +
+
+                        "<div class = 'comment-date'> <span> Finish Date - </span>" + result[i].Deadline + "</div>" +
+
+                        "<p class = 'card-text user-name' > " + result[i].username + "</p> " +
+                        "<p class = 'card-text user-name' > Story Title : " + result[i].storyname + "</p> </div>" +
+
+                        "</div>";
+                   
+
+                    switch (result[i].Status) {
+                        case 0:
+                            $("#sortableNotStarted").append(SampleTask);
+                            break;
+                        case 1:
+                            $("#sortableInProgress").append(SampleTask);
+                            break;
+                        case 2:
+                            $("#sortableDone").append(SampleTask);
+                            break;
+                        default:
+                            console.log("Ekleme Başarısız");
+                    } 
+                }
+
+            });
+
+            $.post("/Member/GetUsers", function (result) {
+
+                Users = result
+            });
+        });
+
+
+        var cardDesc = new Array();
+
+        var cardIDCounter = 0;
+        var taskIDCounter = 0;
+
+        $("#sortableNotStarted").sortable({
+            connectWith: "#sortableInProgress",
+            revert: true,
+            stop: function (event, ui) {
+                //  console.log(ui.item[0].attributes[0].nodeValue);
+                data = {
+                    Task_Id : ui.item[0].attributes[0].nodeValue,
+                    TaskStatus : 1
+                };
+
+                $.post("/Member/UpdateTask", data, function (result) {
+                    if (result.status === 0) {
+                        alert("Başarılı");
+                    }
+                    else {
+                        alert("BAŞARISIZ");
+                    }
+                });
+            }
+        });
+        $("#sortableInProgress").sortable({
+            connectWith: "#sortableDone",
+            revert: true,
+            stop: function (event, ui) {
+                data = {
+                    Task_Id: ui.item[0].attributes[0].nodeValue,
+                    TaskStatus: 2
+                };
+
+                $.post("/Member/UpdateTask", data, function (result) {
+                    if (result.status === 0) {
+                        alert("Başarılı");
+                    }
+                    else {
+                        alert("BAŞARISIZ");
+                    }
+                });
+            }
+        });
+        $("#sortableDone").sortable({
+            connectWith: "#sortableInProgress",
+            revert: true,
+            stop: function (event, ui) {
+                data = {
+                    Task_Id: ui.item[0].attributes[0].nodeValue,
+                    TaskStatus: 1
+                };
+
+                $.post("/Member/UpdateTask", data, function (result) {
+                    if (result.status === 0) {
+                        alert("Başarılı");
+                    }
+                    else {
+                        alert("BAŞARISIZ");
+                    }
+                });
+            }
+        });
+
+
+        $("#addStory").click(function() {
+
+            $.alert({
+
+                title: 'Create Story',
+
+                content: '' +
+                    '<form action="" class="formName">' +
+                    '<div class="form-group">' +
+                    '<input type="text" placeholder="Story Title" class="title form-control" required /><br>' +
+                    '<input type="text" placeholder="Story Description" class="desc2 form-control" required />' +
+                    '</div>' +
+                    '</form>',
+
+
+                buttons: {
+                    formSubmit: {
+                        text: 'Create',
+                        btnClass: 'btn-blue',
+                        action: function() {
+
+                            var title = this.$content.find('.title').val();
+                            var desc2 = this.$content.find(".desc2").val();
+                            if (!title) {
+                                $.alert('Başlık kısmını boş geçmeyiniz.');
+                                return false;
+                            }
+                            if (!desc2) {
+                                $.alert('Açıklama kısmını boş geçmeyiniz.');
+                                return false;
+                            }
+
+                            var data = {
+                                Name: title,
+                                Description: desc2
+                            }
+
+                            $.post("/Member/AddStory", data, function (result) {
+
+                                if (result.status === 0) {
+                                    var SampleStory = "<div class='card w-100' id='storyCard' style='width: 18rem;' StoryId='"+result.Story.StoryId+"'>" +
+                                        "<div class='card-body'>" +
+                                        "<h5 class='card-title'>" + title + "</h5>" +
+                                        "<p class='card-text'>" + desc2 + "</p>" +
+                                        "</div>" +
+                                        "</div>";
+                                    $("#storyies").append(SampleStory);
+                                } else {
+                                    alert("hata");
+                                }
+                            });
+
+                   
+
+                        }
+                    },
+                    cancel: function() {
+                        //close
+                    },
+                },
+                onContentReady: function() {
+                    // bind to events
+                    var jc = this;
+                    this.$content.find('form').on('submit', function(e) {
+                        // if the user submits the form by pressing enter in the field.
+                        e.preventDefault();
+                        jc.$$formSubmit.trigger('click'); // reference the button and click it
+                    });
+                }
+            });
+        });
+
+        function dateToTimestamp(date) {
+            var myDate = date;//"2018-05-06";
+            myDate = myDate.split("-");
+            var newDate = myDate[1] + "/" + myDate[2] + "/" + myDate[0];
+            return new Date(newDate).getTime();
+        }
+
+
+        $(document.body).on("dblclick", "#storyCard", function() {
+
+            var storyID = $(this).attr("StoryId");
+
+            
+
+            $.alert({
+                title: 'Create Task',
+                content: '' +
+                    '<form action="" class="formName">' +
+                    '<div class="form-group">' +
+                    '<input type="text" placeholder="Task Name" class="task form-control" required /><br>' +
+                    '<select id="SelectID"> </select><br>' +
+                    '<input type="text" placeholder="Description" class="desc form-control" required />' +
+                    '<input type="date" placeholder="Finish Date" min="2000-01-02" class="date form-control" required />' +
+                    '</div>' +
+                    '</form>',
+
+                buttons: {
+                    formSubmit: {
+                        text: 'Create',
+                        btnClass: 'btn-blue',
+                        action: function() {
+
+
+
+                            
+                            var task = this.$content.find('.task').val();
+                            var desc = this.$content.find(".desc").val();
+                            var date = this.$content.find(".date").val();
+                            var userID = this.$content.find("#SelectID").val();
+
+                            
+
+                           
+
+                            
+                            if (!task) {
+                                $.alert('is required.');
+                                return false;
+                            }
+                            var data = {
+                                Name: task,
+                                Description: desc,
+                                Deadline: dateToTimestamp(date),
+                                Status: 0,
+                                StoryId: storyID,
+                                UserId: userID
+
+                            }
+
+                            $.post("/Member/AddTask", data, function (result) {
+
+                                if (result.status === 0) {
+
+                                    console.log(result)
+                                    var SampleTask = "<div TaskId=" + result.Task.TaskId + " class='card text-light w-100' style='width: 18rem;'>" +
+                                        "<div class='card-body'>" +
+                                        "<h5 class='card-title'>" + task + " <i id='info' data-cardid=" + result.Task.TaskId + "  class='fas fa-info-circle'></i> <ts data-thid=" + result.Task.TaskId + " class='fas fa-trash-alt'></ts> </h5>" +
+
+                                        "<div class = 'comment-date'> <span> Finish Date - </span>" + date + "</div>" +
+
+                                        "<p class = 'card-text user-name' > " + result.Task.User.Username + "</p> " +
+                                        "<p class = 'card-text user-name' > Story Title : " + result.Task.Story.Name + "</p> </div>" +
+
+                                        "</div>";
+                                    $("#sortableNotStarted").append(SampleTask);
+                                    alert("Eklendi");
+                                } else {
+                                    alert("hata");
+                                }
+                            });
+
+                       
+                                   
+                        
+
+                            cardIDCounter++;
+                            taskIDCounter++;
+
+                        }
+                    },
+                    cancel: function() {
+                        //close
+                    },
+                },
+                onContentReady: function() {
+                    // bind to events
+                    for (var i = 0; i < Users.length; i++) {
+                        $("#SelectID").append(" <option value=" + Users[i].UserId + ">" + Users[i].Username + "</option>")
+                    }
+
+                    var jc = this;
+                    this.$content.find('form').on('submit', function(e) {
+                        // if the user submits the form by pressing enter in the field.
+                        e.preventDefault();
+                        jc.$$formSubmit.trigger('click'); // reference the button and click it
+                    });
+                }
+            });
+        });
+
+
+
+
+
+        $(document.body).on("click", "#info", function() {
+
+            var curCardDesc = $(this).data("cardid");
+
+
+            $.alert({
+                title: "Deneme",
+                content: "Aciklama : " + cardDesc[curCardDesc],
+                buttons: {
+                    TAMAM: {}
+                }
+            })
+        });
+
+        $(document.body).on("click", "ts", function() {
+
+            var thid = $(this).data("thid");
+            alert(thid);
+
+            $.confirm({
+                title: 'Are You Sure!',
+                content: 'Task delete!',
+                buttons: {
+                    confirm: function () {
+                        var data = {
+                            TaskId: thid
+                        }
+                        $.post("/Member/RemoveTask", data, function (result) {
+
+                            if (result.status === 0) {
+                                $("div[TaskId='" + thid + "']").remove();
+                                $.alert('Suscesfull');
+                            }
+                            else {
+                             
+                                $.alert('Hata');
+                            }
+                        });
+
+                       
+                    },
+                    cancel: function() {
+                        $.alert('Canceled!');
+                    },
+
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

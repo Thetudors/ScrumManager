@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container-fluid p-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center">Scrum Manager</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mt-5">
+                <!-- register -->
+                <form>
+                    <h2>KAYIT OL</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="registerUsername" aria-describedby="emailHelp" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="registerMail" placeholder="email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="registerPassword" placeholder="password">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btnRegister">KAYIT OL</button>
+                </form>
+            </div>
+            <div class="col-md-6 mt-5">
+                <!-- login -->
+                <form>
+                    <h2>GİRİŞ YAP</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="loginUsername" aria-describedby="emailHelp" placeholder="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="loginPassword" placeholder="password">
+                    </div>
+                    <button type="button" id="btnLogin" class="btn btn-primary">GİRİŞ YAP</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("#btnRegister").click(function () {
+
+                var username = $("#registerUsername").val();
+                var mail = $("#registerMail").val();
+                var password = $("#registerPassword").val();
+
+
+                var data = { "Username": username, "Mail": mail, "Password": password };
+
+                $.post("/Index/Register", data, function (r) {
+                    alert(r);
+                })
+
+            });
+
+
+            $("#btnLogin").click(function () {
+
+                var username = $("#loginUsername").val();
+                var password = $("#loginPassword").val();
+               
+
+
+                var data = { "Username": username, "Password": password };
+
+                $.post("/Index/Login", data, function (r) {
+                    alert(r);
+                    if (r == 0) {
+                         window.location.replace("@Url.Action("Index", "Member")");
+                    }
+
+                   
+                })
+
+            });
+
+        });
+
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+
+
+</html>
