@@ -35,55 +35,22 @@
 
                 <p class="text-light">Double-click Story for new task</p>
                 <hr>
-                <div class="card w-100" id="storyCard" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                </div>
+
             </div>
             <div style="height: 100vh;" id="sortableNotStarted" class="col-md-3 col-sm-6 bg-light">
                 <h2 class="text-center text-secondary">Not Started</h2>
                 <hr>
-                <div class="card text-light w-100" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Login Sistemi <i id="info" data-cardid="1" class="fas fa-info-circle"></i></h5>
 
-
-                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
-                        <p class="card-text user-name">Onat AKTAŞ</p>
-                    </div>
-                </div>
             </div>
             <div style="height: 100vh;" id="sortableInProgress" class="col-md-3 col-sm-6 bg-secondary">
                 <h2 class="text-center text-light">In Progress</h2>
                 <hr>
-                <div class="card text-light w-100" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Login Sistemi
-                            <ts class="fas fa-trash-alt"></ts>
-                        </h5>
 
-                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
-                        <p class="card-text user-name">Onat AKTAŞ</p>
-                    </div>
-                </div>
             </div>
             <div style="height: 100vh;" id="sortableDone" class="col-md-3 col-sm-6 bg-light">
                 <h2 class="text-center text-secondary">Done</h2>
                 <hr>
-                <div id="taskid5" class="card text-light w-100" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Login Sistemi <i id="info" data-cardid="0" class="fas fa-info-circle"></i>
-                            <ts data-thid="5" class="fas fa-trash-alt"></ts>
-                        </h5>
 
-                        <div class="comment-date"><span>Finish Date - </span>01.01.2018</div>
-                        <p class="card-text user-name">Onat AKTAŞ</p>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -97,9 +64,13 @@
 
         var Users;
 
+        var Tasks = {
+
+        };
+
         $(function () {
 
-            $.post("/Member/GetStories",  function (result) {
+            $.post("/Member/GetStories", function (result) {
 
                 for (var i = 0; i < result.length; i++) {
                     var SampleStory = "<div class='card w-100' id='storyCard' style='width: 18rem;' StoryId='" + result[i].StoryId + "'>" +
@@ -110,23 +81,24 @@
                         "</div>";
                     $("#storyies").append(SampleStory);
                 }
-                
+
             });
+
             $.post("/Member/GetTask", function (result) {
 
                 for (var i = 0; i < result.length; i++) {
-
+                    Tasks[result[i].TaskId] = result[i];
                     var SampleTask = "<div TaskId=" + result[i].TaskId + " class='card text-light w-100' style='width: 18rem;'>" +
                         "<div class='card-body'>" +
                         "<h5 class='card-title'>" + result[i].Name + " <i id='info' data-cardid=" + result[i].TaskId + "  class='fas fa-info-circle'></i> <ts data-thid=" + result[i].TaskId + " class='fas fa-trash-alt'></ts> </h5>" +
 
-                        "<div class = 'comment-date'> <span> Finish Date - </span>" + result[i].Deadline + "</div>" +
+                        "<div class = 'comment-date'> <span> Finish Date - </span>" + TimestampToDate(result[i].Deadline) + "</div>" +
 
                         "<p class = 'card-text user-name' > " + result[i].username + "</p> " +
                         "<p class = 'card-text user-name' > Story Title : " + result[i].storyname + "</p> </div>" +
 
                         "</div>";
-                   
+
 
                     switch (result[i].Status) {
                         case 0:
@@ -139,8 +111,8 @@
                             $("#sortableDone").append(SampleTask);
                             break;
                         default:
-                            console.log("Ekleme Başarısız");
-                    } 
+
+                    }
                 }
 
             });
@@ -161,18 +133,19 @@
             connectWith: "#sortableInProgress",
             revert: true,
             stop: function (event, ui) {
-                //  console.log(ui.item[0].attributes[0].nodeValue);
+                console.log(ui);
+
                 data = {
-                    Task_Id : ui.item[0].attributes[0].nodeValue,
-                    TaskStatus : 1
+                    Task_Id: ui.item[0].attributes[0].nodeValue,
+                    TaskStatus: 1
                 };
 
                 $.post("/Member/UpdateTask", data, function (result) {
                     if (result.status === 0) {
-                        alert("Başarılı");
+
                     }
                     else {
-                        alert("BAŞARISIZ");
+
                     }
                 });
             }
@@ -181,6 +154,7 @@
             connectWith: "#sortableDone",
             revert: true,
             stop: function (event, ui) {
+                console.log(ui);
                 data = {
                     Task_Id: ui.item[0].attributes[0].nodeValue,
                     TaskStatus: 2
@@ -188,10 +162,10 @@
 
                 $.post("/Member/UpdateTask", data, function (result) {
                     if (result.status === 0) {
-                        alert("Başarılı");
+
                     }
                     else {
-                        alert("BAŞARISIZ");
+
                     }
                 });
             }
@@ -200,6 +174,7 @@
             connectWith: "#sortableInProgress",
             revert: true,
             stop: function (event, ui) {
+                console.log(ui);
                 data = {
                     Task_Id: ui.item[0].attributes[0].nodeValue,
                     TaskStatus: 1
@@ -207,17 +182,17 @@
 
                 $.post("/Member/UpdateTask", data, function (result) {
                     if (result.status === 0) {
-                        alert("Başarılı");
+
                     }
                     else {
-                        alert("BAŞARISIZ");
+
                     }
                 });
             }
         });
 
 
-        $("#addStory").click(function() {
+        $("#addStory").click(function () {
 
             $.alert({
 
@@ -236,7 +211,7 @@
                     formSubmit: {
                         text: 'Create',
                         btnClass: 'btn-blue',
-                        action: function() {
+                        action: function () {
 
                             var title = this.$content.find('.title').val();
                             var desc2 = this.$content.find(".desc2").val();
@@ -257,7 +232,7 @@
                             $.post("/Member/AddStory", data, function (result) {
 
                                 if (result.status === 0) {
-                                    var SampleStory = "<div class='card w-100' id='storyCard' style='width: 18rem;' StoryId='"+result.Story.StoryId+"'>" +
+                                    var SampleStory = "<div class='card w-100' id='storyCard' style='width: 18rem;' StoryId='" + result.Story.StoryId + "'>" +
                                         "<div class='card-body'>" +
                                         "<h5 class='card-title'>" + title + "</h5>" +
                                         "<p class='card-text'>" + desc2 + "</p>" +
@@ -269,18 +244,18 @@
                                 }
                             });
 
-                   
+
 
                         }
                     },
-                    cancel: function() {
+                    cancel: function () {
                         //close
                     },
                 },
-                onContentReady: function() {
+                onContentReady: function () {
                     // bind to events
                     var jc = this;
-                    this.$content.find('form').on('submit', function(e) {
+                    this.$content.find('form').on('submit', function (e) {
                         // if the user submits the form by pressing enter in the field.
                         e.preventDefault();
                         jc.$$formSubmit.trigger('click'); // reference the button and click it
@@ -296,12 +271,26 @@
             return new Date(newDate).getTime();
         }
 
+        function TimestampToDate(date1) {
 
-        $(document.body).on("dblclick", "#storyCard", function() {
+            var myDate = new Date(date1);
+            var months_arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            var year = myDate.getFullYear();
+            var month = months_arr[myDate.getMonth()];
+            var day = myDate.getDate();
+
+            var time = year + " - " + month + " - " + day;
+            return time;
+
+        }
+
+
+        $(document.body).on("dblclick", "#storyCard", function () {
 
             var storyID = $(this).attr("StoryId");
 
-            
+
 
             $.alert({
                 title: 'Create Task',
@@ -319,21 +308,14 @@
                     formSubmit: {
                         text: 'Create',
                         btnClass: 'btn-blue',
-                        action: function() {
+                        action: function () {
 
-
-
-                            
                             var task = this.$content.find('.task').val();
                             var desc = this.$content.find(".desc").val();
                             var date = this.$content.find(".date").val();
                             var userID = this.$content.find("#SelectID").val();
 
-                            
 
-                           
-
-                            
                             if (!task) {
                                 $.alert('is required.');
                                 return false;
@@ -364,33 +346,33 @@
 
                                         "</div>";
                                     $("#sortableNotStarted").append(SampleTask);
-                                    alert("Eklendi");
+
                                 } else {
                                     alert("hata");
                                 }
                             });
 
-                       
-                                   
-                        
+
+
+
 
                             cardIDCounter++;
                             taskIDCounter++;
 
                         }
                     },
-                    cancel: function() {
+                    cancel: function () {
                         //close
                     },
                 },
-                onContentReady: function() {
+                onContentReady: function () {
                     // bind to events
                     for (var i = 0; i < Users.length; i++) {
                         $("#SelectID").append(" <option value=" + Users[i].UserId + ">" + Users[i].Username + "</option>")
                     }
 
                     var jc = this;
-                    this.$content.find('form').on('submit', function(e) {
+                    this.$content.find('form').on('submit', function (e) {
                         // if the user submits the form by pressing enter in the field.
                         e.preventDefault();
                         jc.$$formSubmit.trigger('click'); // reference the button and click it
@@ -403,21 +385,20 @@
 
 
 
-        $(document.body).on("click", "#info", function() {
-
-            var curCardDesc = $(this).data("cardid");
+        $(document.body).on("click", "#info", function () {
+            var TaskID = $(this).data("cardid");
 
 
             $.alert({
-                title: "Deneme",
-                content: "Aciklama : " + cardDesc[curCardDesc],
+                title: "Task Description",
+                content: Tasks[TaskID].Description,
                 buttons: {
                     TAMAM: {}
                 }
             })
         });
 
-        $(document.body).on("click", "ts", function() {
+        $(document.body).on("click", "ts", function () {
 
             var thid = $(this).data("thid");
             alert(thid);
@@ -437,14 +418,14 @@
                                 $.alert('Suscesfull');
                             }
                             else {
-                             
+
                                 $.alert('Hata');
                             }
                         });
 
-                       
+
                     },
-                    cancel: function() {
+                    cancel: function () {
                         $.alert('Canceled!');
                     },
 
